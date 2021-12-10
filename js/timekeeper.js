@@ -24,9 +24,9 @@ THE SOFTWARE.
 
 $(function(){
 	var loadedcss = '';
-	$('#time1').val('15:00');
-	$('#time2').val('20:00');
-	$('#time3').val('25:00');
+	$('#time1').val('00:01');
+	$('#time2').val('08:00');
+	$('#time3').val('10:00');
 	$('#info').html("Are you ready?");
 	function getHashParams() {
     var hashParams = {};
@@ -215,13 +215,13 @@ $(function(){
 					if((last_time < time1 && time1 <= cur_time) || (last_time==time1 && cur_time==time1)){
 						changePhaseClass('1');
 						audio_chime1.currentTime = 0;
-						audio_chime1.play();
+						// audio_chime1.play();
 					}
 
 					if((last_time < time2 && time2 <= cur_time) || (last_time==time2 && cur_time==time2)){
 						changePhaseClass('2');
 						audio_chime2.currentTime = 0;
-						audio_chime2.play();
+						// audio_chime2.play();
 						$('#time').css('color', 'yellow');
 						$('#info').css('color', 'yellow');
 					}
@@ -229,11 +229,11 @@ $(function(){
 					if((last_time < time3 && time3 <= cur_time) || (last_time==time3 && cur_time==time3)){
 						changePhaseClass('3');
 						audio_chime3.currentTime = 0;
-						audio_chime3.play();
+						// audio_chime3.play();
 						$('.nav li').removeClass('active');
-						$('#info').html("TIME UP! 8888888888");
-						$('#time').css('color', 'red');
-						$('#info').css('color', 'red');
+						$('#info').html("TIME UP! 👏👏👏👏👏");
+						$('#time').css('color', 'orange');
+						$('#info').css('color', 'orange');
 					}
 
 				}
