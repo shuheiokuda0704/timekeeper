@@ -24,9 +24,8 @@ THE SOFTWARE.
 
 $(function(){
 	var loadedcss = '';
-	$('#time1').val('00:01');
-	$('#time2').val('08:00');
-	$('#time3').val('10:00');
+	$('#time1').val('08:00');
+	$('#time2').val('10:00');
 	$('#info').html("Are you ready?");
 	function getHashParams() {
     var hashParams = {};
@@ -45,9 +44,8 @@ $(function(){
 
   function parseHashParams(){
     params = getHashParams();
-    if(params.t1 !== undefined) $('#time1').val(params.t1);
+	if(params.t1 !== undefined) $('#time1').val(params.t1);
 		if(params.t2 !== undefined) $('#time2').val(params.t2);
-		if(params.t3 !== undefined) $('#time3').val(params.t3);
 		if(params.m !== undefined) $('#info').html(params.m);
 		if(loadedcss !== ''){
 			location.reload();
@@ -63,7 +61,6 @@ $(function(){
 	function updateHash() {
     var hashstr = '#t1=' + $('#time1').val()
 		+ '&t2=' + $('#time2').val()
-		+ '&t3=' + $('#time3').val()
 		+ '&m=' + encodeURIComponent($('#info').html());
 		if(loadedcss !== 'default'){
 			hashstr = hashstr + '&th=' + encodeURIComponent(loadedcss);
@@ -83,7 +80,7 @@ $(function(){
 	parseHashParams();
 	updateHash();
 
-	$('#time1,#time2,#time3,#info').change(function(){
+	$('#time1,#time2,#info').change(function(){
 		updateHash();
 	});
 
@@ -94,11 +91,6 @@ $(function(){
 					updateHash();
 	    }
 	});
-
-	var audio_chime1,audio_chime2,audio_chime3;
-	audio_chime1 = new Audio("./wav/chime1.wav");
-	audio_chime2 = new Audio("./wav/chime2.wav");
-	audio_chime3 = new Audio("./wav/chime3.wav");
 
 	function changeStateClass(s) {
 		$('body').removeClass(function(index, className) {
@@ -119,6 +111,9 @@ $(function(){
 		$('.nav li').removeClass('active');
 		$('.nav li#standby').addClass('active');
 		$('#state').html('STANDBY');
+		$('#info').html("");
+		$('#time').css('color', 'white');
+		$('#info').css('color', 'white');
 		changeStateClass('standby');
 		changePhaseClass('0');
 		time_inner=(new Date('2011/1/1 00:00:00'));
@@ -127,7 +122,7 @@ $(function(){
 	changeStateClass('standby');
 	changePhaseClass('0');
 	var start_time=new Date();
-	var time3_=new Date();
+	var time2_=new Date();
 	var last_time;
 	$('.nav #start').click(function (event){
 		event.preventDefault();
@@ -139,24 +134,8 @@ $(function(){
 		$('#state').html('');
 		changeStateClass('start');
 		start_time = new Date((new Date()).getTime() - (time_inner-(new Date('2011/1/1 00:00:00'))));
-		time3_ = new Date('2011/1/1 00:'+$('#time3').val());
+		time2_ = new Date('2011/1/1 00:'+$('#time2').val());
 		last_time = null;
-		audio_chime1.load();
-		audio_chime2.load();
-		audio_chime3.load();
-	});
-
-	$('.nav #pause').click(function (event){
-		event.preventDefault();
-		if($('.nav li#standby').hasClass('active')){
-			return;
-		}
-
-		$('.nav li').removeClass('active');
-		$('.nav li#pause').addClass('active');
-		update_time();
-		$('#state').html('PAUSED');
-		changeStateClass('paused');
 	});
 
 	function resize_display() {
@@ -177,16 +156,9 @@ $(function(){
 	}
 	$(window).bind("resize", resize_display);
 
-	$('#soundcheck').click(function (event){
-		event.preventDefault();
-		audio_chime1.load();
-		audio_chime1.currentTime = 0;
-		audio_chime1.play();
-	});
-
 	function show_time(){
-		var time_str= ('00' +  time_inner.getMinutes()   ).slice(-2) + ':'
-					+ ('00' +  time_inner.getSeconds() ).slice(-2);
+		var time_str= ('00' + time_inner.getMinutes() ).slice(-2) + ':'
+					+ ('00' + time_inner.getSeconds() ).slice(-2);
 		$('#time').html(time_str);
 	}
 
@@ -194,8 +166,8 @@ $(function(){
 	function update_time(){
 		var cur_time= new Date();
 		var e=new Date((new Date('2011/1/1 00:00:00')).getTime()+(start_time-cur_time));
-		e.setSeconds(e.getSeconds() + time3_.getSeconds() + 1);
-		e.setMinutes(e.getMinutes() + time3_.getMinutes());
+		e.setSeconds(e.getSeconds() + time2_.getSeconds() + 1);
+		e.setMinutes(e.getMinutes() + time2_.getMinutes());
 		time_inner=e;
 		show_time();
 	}
@@ -210,26 +182,15 @@ $(function(){
 					$('#info').html("");
 					var time1 = new Date(start_time.getTime()+((new Date('2011/1/1 00:'+$('#time1').val()))-(new Date('2011/1/1 00:00:00'))));
 					var time2 = new Date(start_time.getTime()+((new Date('2011/1/1 00:'+$('#time2').val()))-(new Date('2011/1/1 00:00:00'))));
-					var time3 = new Date(start_time.getTime()+((new Date('2011/1/1 00:'+$('#time3').val()))-(new Date('2011/1/1 00:00:00'))));
-					
-					if((last_time < time1 && time1 <= cur_time) || (last_time==time1 && cur_time==time1)){
-						changePhaseClass('1');
-						audio_chime1.currentTime = 0;
-						// audio_chime1.play();
-					}
 
-					if((last_time < time2 && time2 <= cur_time) || (last_time==time2 && cur_time==time2)){
+					if((last_time < time1 && time1 <= cur_time) || (last_time==time1 && cur_time==time1)){
 						changePhaseClass('2');
-						audio_chime2.currentTime = 0;
-						// audio_chime2.play();
 						$('#time').css('color', 'yellow');
 						$('#info').css('color', 'yellow');
 					}
 
-					if((last_time < time3 && time3 <= cur_time) || (last_time==time3 && cur_time==time3)){
+					if((last_time < time2 && time2 <= cur_time) || (last_time==time2 && cur_time==time2)){
 						changePhaseClass('3');
-						audio_chime3.currentTime = 0;
-						// audio_chime3.play();
 						$('.nav li').removeClass('active');
 						$('#info').html("TIME UP! 👏👏👏👏👏");
 						$('#time').css('color', 'orange');
